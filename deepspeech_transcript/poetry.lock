@@ -166,7 +166,7 @@ python-versions = ">=3.5"
 name = "deepspeech"
 version = "0.9.3"
 description = "A library for running inference on a DeepSpeech model"
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -563,7 +563,7 @@ test = ["pytest", "coverage", "requests", "nbval", "selenium", "pytest-cov", "re
 name = "numpy"
 version = "1.22.2"
 description = "NumPy is the fundamental package for array computing with Python."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.8"
 
@@ -1026,7 +1026,7 @@ notebook = ">=4.4.1"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "53ff423e3a86eed95d9c79d75e3dedf7190bb7e2045d8fa4bb2e1d47bc11a75f"
+content-hash = "e1243754fa6876e4f9a6510b4cecb460a94f0b2fa5f84f45f1da94830478869d"
 
 [metadata.files]
 appnope = [
