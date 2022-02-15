@@ -6,6 +6,7 @@ authors = ["Nath <nathalia.barreirosf@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+deepspeech = "^0.9.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
