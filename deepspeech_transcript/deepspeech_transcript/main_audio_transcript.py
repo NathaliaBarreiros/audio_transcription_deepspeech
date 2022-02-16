@@ -1,4 +1,5 @@
 #%% Libraries import
+from operator import index
 from deepspeech import Model
 from timeit import default_timer as timer
 import os
@@ -23,9 +24,8 @@ def main():
 
     # For jupyter
     data = pd.read_csv("../csv_docs/paths.csv")
-
     # For debugger
-    # data = pd.read_csv("././csv_docs/paths.csv")
+    # data = pd.read_csv(os.getcwd() + "/deepspeech_transcript/csv_docs/paths.csv")
 
     paths: List[str] = list(data.audio_path)
 
@@ -53,9 +53,12 @@ def main():
         final_data.append(new_data)
 
     new_csv = pd.DataFrame(final_data, columns=header)
-    new_csv.to_csv("../csv_docs/transcripted_audios1.csv", index=False)
+    new_csv.to_csv("../csv_docs/transcripted_audios2.csv", index=False)
+    # For debugger
+    # new_csv.to_csv(os.getcwd()+"/deepspeech_transcript/csv_docs/transcripted_audios_p2.csv", index=False)
+
+
     print("Audio transcriptions are done, go fetch the transcripted_audios.csv file!")
-    # print(new_csv)
 
 
 #%% Entry point

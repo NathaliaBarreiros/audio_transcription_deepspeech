@@ -46,7 +46,7 @@ def frame_generator(frame_duration_ms, audio, sample_rate):
         offset += n
 
 
-# %% PCM audio data generator to filter out non-voiced audio frames. Inputs:sample_rate frame_duration_ms, padding_duration_ms,instance of webrtcvad.Vad,frames. Returns: generator that yields PCM audio data.
+# %% PCM aud>io data generator to filter out non-voiced audio frames. Inputs:sample_rate frame_duration_ms, padding_duration_ms,instance of webrtcvad.Vad,frames. Returns: generator that yields PCM audio data.
 def vad_collector(sample_rate, frame_duration_ms, padding_duration_ms, vad, frames):
     num_padding_frames = int(padding_duration_ms / frame_duration_ms)
     ring_buffer = collections.deque(maxlen=num_padding_frames)
@@ -107,16 +107,16 @@ def load_model(models, scorer):
 
 # %% Function to resolve directory path for the models. Input: path. Returns: a tuple containing each of the model files (pb, scorer).
 def resolve_models(dir_name):
-    pb = glob.glob(dir_name + "/*.pbmm")[0]
+    pb: str = glob.glob(dir_name + "/*.pbmm")[0]
     # print("Found Model: %s" % pb)
 
-    scorer = glob.glob(dir_name + "/*.scorer")[0]
+    scorer: str = glob.glob(dir_name + "/*.scorer")[0]
     # print("Found scorer: %s" % scorer)
 
     return pb, scorer
 
 
-#%% Function to transcript audio segments. Input: Deepspeech oject, audio, sample_rate. Returns: a list [Inference, Inference Time, Audio Length].
+#%% Function to transcript audio segments. Input: Deepspeech object, audio, sample_rate. Returns: a list [Inference, Inference Time, Audio Length].
 def stt(ds, audio, fs):
     inference_time = 0.0
     # Run Deepspeech
@@ -130,3 +130,4 @@ def stt(ds, audio, fs):
     # )
 
     return [output, inference_time]
+
