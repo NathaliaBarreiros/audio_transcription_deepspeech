@@ -11,6 +11,7 @@ import os
 import numpy as np
 from typing import List
 
+
 #%% Read .wav file function, returns (PCM audio data, sample rate, duration)
 def read_wave(path):
     with contextlib.closing(wave.open(path, "rb")) as wf:

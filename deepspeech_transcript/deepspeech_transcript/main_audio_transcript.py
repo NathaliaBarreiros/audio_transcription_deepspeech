@@ -1,4 +1,4 @@
-#%% Libraries import
+# %% Libraries import
 from operator import index
 from deepspeech import Model
 from timeit import default_timer as timer
@@ -9,12 +9,13 @@ import pandas as pd
 from typing import List
 
 
-#%% Main function
+# %% Main function
 def main():
     model: str = "~/audio_transcription_deepspeech/deepspeech_transcript/models"
     dir_name = os.path.expanduser(model)
 
-    aggressive = 1  # input("What level of non-voice filtering would you like? (0-3)")
+    # input("What level of non-voice filtering would you like? (0-3)")
+    aggressive = 1
 
     # Resolve all the paths of model files
     output_graph, scorer = pr.resolve_models(dir_name)
@@ -22,10 +23,11 @@ def main():
     # Load output_graph, alphabet and scorer
     model_retval: List[str] = pr.load_model(output_graph, scorer)
 
-    # For jupyter
+    # For jupyter & python file
     data = pd.read_csv("../csv_docs/paths.csv")
+
     # For debugger
-    # data = pd.read_csv(os.getcwd() + "/deepspeech_transcript/csv_docs/paths.csv")
+    # data = pd.read_csv("./deepspeech_transcript/csv_docs/paths.csv")
 
     paths: List[str] = list(data.audio_path)
 
@@ -54,14 +56,15 @@ def main():
 
     new_csv = pd.DataFrame(final_data, columns=header)
     new_csv.to_csv("../csv_docs/transcripted_audios2.csv", index=False)
-    # For debugger
-    # new_csv.to_csv(os.getcwd()+"/deepspeech_transcript/csv_docs/transcripted_audios_p2.csv", index=False)
 
+    # For debugger
+    # new_csv.to_csv(
+    #     "./deepspeech_transcript/csv_docs/transcripted_audios_p2.csv", index=False)
 
     print("Audio transcriptions are done, go fetch the transcripted_audios.csv file!")
 
 
-#%% Entry point
+# %% Entry point
 if __name__ == "__main__":
     main()
 
