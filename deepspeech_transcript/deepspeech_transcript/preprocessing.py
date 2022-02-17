@@ -1,4 +1,4 @@
-#%% Libraries import
+# %% Libraries import
 import collections
 import contextlib
 import wave
@@ -12,43 +12,47 @@ import numpy as np
 from typing import List
 
 
-#%% Read .wav file function, returns (PCM audio data, sample rate, duration)
-def read_wave(path):
+# %% Read .wav file function, returns (PCM audio data, sample rate, duration)
+def read_wave(path: str):
     with contextlib.closing(wave.open(path, "rb")) as wf:
-        num_channels = wf.getnchannels()
+        num_channels: int = wf.getnchannels()
         assert num_channels == 1
-        sample_width = wf.getsampwidth()
+        sample_width: int = wf.getsampwidth()
         assert sample_width == 2
-        sample_rate = wf.getframerate()
+        sample_rate: int = wf.getframerate()
         assert sample_rate in (8000, 16000, 32000)
-        frames = wf.getnframes()
-        pcm_data = wf.readframes(frames)
-        duration = frames / sample_rate
+        frames: int = wf.getnframes()
+        pcm_data: bytes = wf.readframes(frames)
+        duration: float = frames / sample_rate
         return pcm_data, sample_rate, duration
 
 
-#%% Representation of a frame audio data
+# %% Representation of a frame audio data
 class Frame(object):
-    def __init__(self, bytes, timestamp, duration):
+    """
+        # class Frame:
+    """
+
+    def __init__(self, bytes: bytes, timestamp: float, duration: float):
         self.bytes = bytes
         self.timestamp = timestamp
         self.duration = duration
 
 
-#%% Frame generator: generates audio frames from PCM audio data (yields frames of the requested duration). Inputs: desire frame duration in ms, the PCM data, the sample rate.
-def frame_generator(frame_duration_ms, audio, sample_rate):
+# %% Frame generator: generates audio frames from PCM audio data (yields frames of the requested duration). Inputs: desire frame duration in ms, the PCM data, the sample rate.
+def frame_generator(frame_duration_ms: int, audio: bytes, sample_rate: int):
     n = int(sample_rate * (frame_duration_ms / 1000.0) * 2)
-    offset = 0
-    timestamp = 0.0
-    duration = (float(n) / sample_rate) / 2.0
+    offset: int = 0
+    timestamp: float = 0.0
+    duration: float = (float(n) / sample_rate) / 2.0
     while offset + n < len(audio):
-        yield Frame(audio[offset : offset + n], timestamp, duration)
+        yield Frame(audio[offset: offset + n], timestamp, duration)
         timestamp += duration
         offset += n
 
 
 # %% PCM aud>io data generator to filter out non-voiced audio frames. Inputs:sample_rate frame_duration_ms, padding_duration_ms,instance of webrtcvad.Vad,frames. Returns: generator that yields PCM audio data.
-def vad_collector(sample_rate, frame_duration_ms, padding_duration_ms, vad, frames):
+def vad_collector(sample_rate: int, frame_duration_ms: int, padding_duration_ms: int, vad: webrtcvad.Vad, frames: List[Frame]):
     num_padding_frames = int(padding_duration_ms / frame_duration_ms)
     ring_buffer = collections.deque(maxlen=num_padding_frames)
     triggered = False
@@ -78,8 +82,8 @@ def vad_collector(sample_rate, frame_duration_ms, padding_duration_ms, vad, fram
         yield b"".join([f.bytes for f in voiced_frames])
 
 
-#%% Segment generator that will return the segment of byte data for the audio, but also and its metadata. Inputs: .wav file. Returns: tuple of audio segments, sample_rate, audio_length.
-def vad_segment_generator(wav_file, aggressiveness):
+# %% Segment generator that will return the segment of byte data for the audio, but also and its metadata. Inputs: .wav file. Returns: tuple of audio segments, sample_rate, audio_length.
+def vad_segment_generator(wav_file: str, aggressiveness: int):
     # print("Caught the wav file @: %s" % (wav_file))
     audio, sample_rate, audio_length = read_wave(wav_file)
     assert sample_rate == 16000, "Only 16000Hz input WAV files are supported for now!"
@@ -91,8 +95,8 @@ def vad_segment_generator(wav_file, aggressiveness):
     return segments, sample_rate, audio_length
 
 
-#%% Function to load pre-trained model into the memory from DeepSpeech. Inputs: model, scorer. Returns: a list [DeepSpeech Object, Model Load Time, Scorer Load Time].
-def load_model(models, scorer):
+# %% Function to load pre-trained model into the memory from DeepSpeech. Inputs: model, scorer. Returns: a list [DeepSpeech Object, Model Load Time, Scorer Load Time].
+def load_model(models: str, scorer: str):
     model_load_start = timer()
     ds = Model(models)
     model_load_end = timer() - model_load_start
@@ -107,7 +111,7 @@ def load_model(models, scorer):
 
 
 # %% Function to resolve directory path for the models. Input: path. Returns: a tuple containing each of the model files (pb, scorer).
-def resolve_models(dir_name):
+def resolve_models(dir_name: str):
     pb: str = glob.glob(dir_name + "/*.pbmm")[0]
     # print("Found Model: %s" % pb)
 
@@ -117,13 +121,13 @@ def resolve_models(dir_name):
     return pb, scorer
 
 
-#%% Function to transcript audio segments. Input: Deepspeech object, audio, sample_rate. Returns: a list [Inference, Inference Time, Audio Length].
-def stt(ds, audio, fs):
-    inference_time = 0.0
+# %% Function to transcript audio segments. Input: Deepspeech object, audio, sample_rate. Returns: a list [Inference, Inference Time, Audio Length].
+def stt(ds: Model, audio: np.ndarray, fs: int):
+    inference_time: float = 0.0
     # Run Deepspeech
     # print("Running inference...")
     inference_start = timer()
-    output = ds.stt(audio)
+    output: str = ds.stt(audio)
     inference_end = timer() - inference_start
     inference_time += inference_end
     # print(
@@ -131,4 +135,3 @@ def stt(ds, audio, fs):
     # )
 
     return [output, inference_time]
-
