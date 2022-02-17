@@ -4,9 +4,10 @@ from deepspeech import Model
 from timeit import default_timer as timer
 import os
 import numpy as np
-import preprocessing as pr
 import pandas as pd
 from typing import List
+
+import deepspeech_transcript.preprocessing as pr
 
 
 # %% Main function

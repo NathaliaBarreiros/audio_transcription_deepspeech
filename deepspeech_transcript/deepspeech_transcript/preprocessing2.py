@@ -3,7 +3,7 @@ import contextlib
 import wave
 import collections
 import webrtcvad
-from typing import List, Dict
+from typing import List, Dict, Tuple
 from deepspeech import Model
 from timeit import default_timer as timer
 import glob
@@ -12,6 +12,15 @@ import numpy as np
 import pandas as pd
 
 # %%
+"""
+Read .wav file function.
+Returns:
+    pcm_data: PCM audio data
+    sample_rate: sample rate of pcm audio
+    duration: duration of audio
+Yields:
+    _type_: _description_
+"""
 
 
 class read_wave:
@@ -19,7 +28,7 @@ class read_wave:
         self.path = path
         print(self.path)
 
-    def return_pcm(self):
+    def return_pcm(self) -> Tuple:
         with contextlib.closing(wave.open(self.path, "rb")) as wf:
             self.num_channels: int = wf.getnchannels()
             assert self.num_channels == 1
@@ -32,6 +41,7 @@ class read_wave:
             self.duration: float = self.frames / self.sample_rate
 
             return self.pcm_data, self.sample_rate, self.duration
+
 
 # %%
 
@@ -124,8 +134,9 @@ class vad_segment_generator:
 
         return self.segments, self.sample_rate, self.audio_length
 
-
 # %%
+
+
 class load_model:
     def __init__(self, models: str, scorer: str):
         self.models = models
@@ -135,12 +146,10 @@ class load_model:
         model_load_start = timer()
         ds = Model(self.models)
         model_load_end = timer() - model_load_start
-        # print("Loaded model in %0.3fs." % (model_load_end))
 
         scorer_load_start = timer()
         ds.enableExternalScorer(self.scorer)
         scorer_load_end = timer() - scorer_load_start
-        # print("Loaded external scorer in %0.3fs." % (scorer_load_end))
 
         return [ds, model_load_end, scorer_load_end]
 
@@ -152,10 +161,8 @@ class resolve_models:
 
     def resolve(self):
         pb: str = glob.glob(self.dir_name + "/*.pbmm")[0]
-        # print("Found Model: %s" % pb)
 
         scorer: str = glob.glob(self.dir_name + "/*.scorer")[0]
-        # print("Found scorer: %s" % scorer)
 
         return pb, scorer
 
@@ -166,22 +173,13 @@ class stt_class:
         self.ds = ds
         self.audio = audio
         self.fs = fs
-        print("STT CLASS TYPES: ")
-        print(type(self.ds))
-        print(type(self.audio))
-        print(type(self.fs))
 
     def stt_func(self):
         self.inference_time: float = 0.0
-        # Run Deepspeech
-        # print("Running inference...")
         inference_start = timer()
         self.output: str = self.ds.stt(self.audio)
         inference_end = timer() - inference_start
         self.inference_time += inference_end
-        # print(
-        #     "Inference took %0.3fs for %0.3fs audio file." % (inference_end, audio_length)
-        # )
 
         return [self.output, self.inference_time]
 
@@ -193,8 +191,6 @@ def main():
 
     model: str = "~/audio_transcription_deepspeech/deepspeech_transcript/models"
     dir_name = os.path.expanduser(model)
-    # print("DIR NAME TYPE")
-    # print(type(dir_name))
 
     vad_instance = vad_segment_generator(data, aggressive)
     segments, sample_rate, audio_length = vad_instance.vad_generation()
@@ -210,15 +206,12 @@ def main():
     print("RESOLVE CLASS WORKS!!!!")
     print(output_graph)
     print(scorer)
-    print(type(output_graph))
-    print(type(scorer))
 
     load_instance = load_model(output_graph, scorer)
     model_retval = load_instance.load()
 
     print("LOAD CLASS WORKS!!!")
     print(model_retval)
-    print(type(model_retval))
 
     for j, segment in enumerate(segments):
         audio = np.frombuffer(segment, dtype=np.int16)
@@ -228,33 +221,8 @@ def main():
         transcript: str = output[0]
     print("STT CLASS WORKS!!!")
     print(transcript)
-    print(type(transcript))
-    print(type(output[1]))
 
-    # transcriptions.append(transcript)
-
-    # read_instance = read_wave(data)
-    # audio, sample_rate, audio_length = read_instance.return_pcm()
-    # # print(audio)
-    # print("READ_WAVE CLASS WORKS!!")
-    # print(sample_rate)
-    # print(audio_length)
-    # f_generator = frame_generator(30, audio, sample_rate)
-    # frames = f_generator.generate_frames()
-    # frames = list(frames)
-    # print("FRAMES: ")
-    # print(frames)
-    # print("FRAMES_GENERATOR CLASS WORKS!!")
-    # vad = webrtcvad.Vad(int(1))
-    # v_collector = vad_collector(sample_rate, 30, 300, vad, frames)
-    # print("SEGMENTS")
-    # segments = v_collector.collector()
-    # print(segments)
-    # print(type(segments))
-    # return data, sample_rate, audio_length
-
-
-if __name__ == "__main__":
-    main()
 
 # %%
+if __name__ == "__main__":
+    main()
