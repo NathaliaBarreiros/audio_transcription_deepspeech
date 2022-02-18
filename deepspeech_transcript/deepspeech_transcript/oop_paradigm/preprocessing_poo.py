@@ -8,7 +8,6 @@ from typing import Generator, List, Dict, Tuple
 from deepspeech import Model
 from timeit import default_timer as timer
 import glob
-import os
 import numpy as np
 
 
