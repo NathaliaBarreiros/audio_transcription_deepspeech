@@ -1,8 +1,6 @@
 import contextlib
 import wave
 import collections
-from deepspeech_transcript.preprocessing import frame_generator
-from deepspeech_transcript.preprocessing2 import read_wave
 import webrtcvad
 from typing import Generator, List, Dict, Tuple
 from deepspeech import Model

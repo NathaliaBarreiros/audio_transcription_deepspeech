@@ -44,7 +44,7 @@ def main():
         final_data.append(new_data)
 
     new_csv = pd.DataFrame(final_data, columns=header)
-    new_csv.to_csv("../csv_docs/transcripted_audios5.csv", index=False)
+    new_csv.to_csv("../csv_docs/transcripted_audios.csv", index=False)
 
     print("Audio transcriptions are done, go fetch the transcripted_audios.csv file!")
 
