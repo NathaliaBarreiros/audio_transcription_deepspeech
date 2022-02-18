@@ -7,17 +7,18 @@ authors = ["Nath <nathalia.barreirosf@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.9"
 deepspeech = "^0.9.3"
+webrtcvad = "^2.0.10"
+PyQt5 = "^5.15.6"
+preprocessing = "^0.1.13"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
-deepspeech = "^0.9.3"
 jupyter = "^1.0.0"
 black = "^22.1.0"
-webrtcvad = "^2.0.10"
-PyQt5 = "^5.15.6"
 numpy = "^1.22.2"
 pandas = "^1.4.1"
 ipykernel = "^6.9.0"
+mypy = "^0.931"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
