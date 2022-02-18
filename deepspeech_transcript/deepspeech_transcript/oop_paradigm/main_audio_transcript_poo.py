@@ -1,7 +1,7 @@
 """Libraries import
 """
-from deepspeech_transcript.preprocessing_poo import Preprocessing
-from deepspeech_transcript.preprocessing_poo import DeepSpeechModel
+from deepspeech_transcript.oop_paradigm.preprocessing_poo import Preprocessing
+from deepspeech_transcript.oop_paradigm.preprocessing_poo import DeepSpeechModel
 import numpy as np
 import pandas as pd
 from typing import List

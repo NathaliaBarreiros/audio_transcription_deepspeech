@@ -5,7 +5,7 @@ import os
 import numpy as np
 import pandas as pd
 from typing import List
-import deepspeech_transcript.preprocessing as pr
+import deepspeech_transcript.functional_programming_paradigm.preprocessing as pr
 
 
 # %% Main function

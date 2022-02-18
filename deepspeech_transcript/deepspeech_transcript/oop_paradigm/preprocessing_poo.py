@@ -1,3 +1,5 @@
+"""Libraries import
+"""
 import contextlib
 import wave
 import collections
@@ -8,16 +10,6 @@ from timeit import default_timer as timer
 import glob
 import os
 import numpy as np
-
-"""
-|__class Frame
-|__class Preprocessing
-    |_def read_wave (method)
-    |_def frame_generator (method)
-    |_def vad_collector (method)
-|__class DeepSpeechModel
-
-"""
 
 
 class Frame():
