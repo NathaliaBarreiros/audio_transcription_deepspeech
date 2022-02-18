@@ -23,7 +23,7 @@ def main():
     """Loads output_graph and scorer into load_models method from DeepSpeechModel class
     """
     model_retval: List[str] = ds_instance.load_models(output_graph, scorer)
-    data = pd.read_csv("../../csv_docs/paths.csv")
+    data = pd.read_csv("../../csv_docs/paths2.csv")
     paths: List[str] = list(data.audio_path)
     transcriptions: List[str] = []
     new_data: List[str] = []
