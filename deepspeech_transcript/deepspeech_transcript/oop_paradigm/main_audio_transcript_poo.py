@@ -23,9 +23,8 @@ def main():
     """Loads output_graph and scorer into load_models method from DeepSpeechModel class
     """
     model_retval: List[str] = ds_instance.load_models(output_graph, scorer)
-    data = pd.read_csv("../csv_docs/paths.csv")
+    data = pd.read_csv("../../csv_docs/paths.csv")
     paths: List[str] = list(data.audio_path)
-
     transcriptions: List[str] = []
     new_data: List[str] = []
     final_data: List[List] = []
@@ -55,7 +54,7 @@ def main():
     """Audio paths and audio's transcriptions into new CSV file
     """
     new_csv = pd.DataFrame(final_data, columns=header)
-    new_csv.to_csv("../csv_docs/transcripted_audios.csv", index=False)
+    new_csv.to_csv("../../csv_docs/transcripted_audios.csv", index=False)
 
     print("Audio transcriptions are done, go fetch the transcripted_audios.csv file!")
 

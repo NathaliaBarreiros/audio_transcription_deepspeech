@@ -19,7 +19,7 @@ def main():
     # Loads output_graph and scorer
     model_retval: List[str] = pr.load_model(output_graph, scorer)
 
-    data = pd.read_csv("../csv_docs/paths.csv")
+    data = pd.read_csv("../../csv_docs/paths.csv")
     aggressive = 1
     paths: List[str] = list(data.audio_path)
     transcriptions: List[str] = []
@@ -46,7 +46,7 @@ def main():
         final_data.append(new_data)
     # Audio paths and audio's transcriptions into new CSV file
     new_csv = pd.DataFrame(final_data, columns=header)
-    new_csv.to_csv("../csv_docs/transcripted_audios.csv", index=False)
+    new_csv.to_csv("../../csv_docs/transcripted_audios.csv", index=False)
 
     print("Audio transcriptions are done, go fetch the transcripted_audios.csv file!")
 
