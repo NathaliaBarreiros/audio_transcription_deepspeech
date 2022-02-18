@@ -3,11 +3,9 @@ import collections
 import contextlib
 import wave
 import webrtcvad
-import sys
 from deepspeech import Model
 from timeit import default_timer as timer
 import glob
-import os
 import numpy as np
 from typing import List
 
@@ -29,17 +27,13 @@ def read_wave(path: str):
 
 # %% Representation of a frame audio data
 class Frame(object):
-    """
-        # class Frame:
-    """
-
     def __init__(self, bytes: bytes, timestamp: float, duration: float):
         self.bytes = bytes
         self.timestamp = timestamp
         self.duration = duration
 
 
-# %% Frame generator: generates audio frames from PCM audio data (yields frames of the requested duration). Inputs: desire frame duration in ms, the PCM data, the sample rate.
+# %% Generates audio frames from PCM audio data (yields frames of the requested duration). Inputs: desire frame duration in ms, the PCM data, the sample rate.
 def frame_generator(frame_duration_ms: int, audio: bytes, sample_rate: int):
     n = int(sample_rate * (frame_duration_ms / 1000.0) * 2)
     offset: int = 0
@@ -51,7 +45,7 @@ def frame_generator(frame_duration_ms: int, audio: bytes, sample_rate: int):
         offset += n
 
 
-# %% PCM aud>io data generator to filter out non-voiced audio frames. Inputs:sample_rate frame_duration_ms, padding_duration_ms,instance of webrtcvad.Vad,frames. Returns: generator that yields PCM audio data.
+# %% PCM audio data generator to filter out non-voiced audio frames. Inputs:sample_rate frame_duration_ms, padding_duration_ms,instance of webrtcvad.Vad,frames. Returns: generator that yields PCM audio data.
 def vad_collector(sample_rate: int, frame_duration_ms: int, padding_duration_ms: int, vad: webrtcvad.Vad, frames: List[Frame]):
     num_padding_frames = int(padding_duration_ms / frame_duration_ms)
     ring_buffer = collections.deque(maxlen=num_padding_frames)
@@ -82,7 +76,7 @@ def vad_collector(sample_rate: int, frame_duration_ms: int, padding_duration_ms:
         yield b"".join([f.bytes for f in voiced_frames])
 
 
-# %% Segment generator that will return the segment of byte data for the audio, but also and its metadata. Inputs: .wav file. Returns: tuple of audio segments, sample_rate, audio_length.
+# %% Segment generator that will return the segment of byte data for the audio, but also its metadata. Inputs: .wav file. Returns: tuple of audio segments, sample_rate, audio_length.
 def vad_segment_generator(wav_file: str, aggressiveness: int):
     # print("Caught the wav file @: %s" % (wav_file))
     audio, sample_rate, audio_length = read_wave(wav_file)
@@ -100,12 +94,10 @@ def load_model(models: str, scorer: str):
     model_load_start = timer()
     ds = Model(models)
     model_load_end = timer() - model_load_start
-    # print("Loaded model in %0.3fs." % (model_load_end))
 
     scorer_load_start = timer()
     ds.enableExternalScorer(scorer)
     scorer_load_end = timer() - scorer_load_start
-    # print("Loaded external scorer in %0.3fs." % (scorer_load_end))
 
     return [ds, model_load_end, scorer_load_end]
 
@@ -113,25 +105,18 @@ def load_model(models: str, scorer: str):
 # %% Function to resolve directory path for the models. Input: path. Returns: a tuple containing each of the model files (pb, scorer).
 def resolve_models(dir_name: str):
     pb: str = glob.glob(dir_name + "/*.pbmm")[0]
-    # print("Found Model: %s" % pb)
 
     scorer: str = glob.glob(dir_name + "/*.scorer")[0]
-    # print("Found scorer: %s" % scorer)
 
     return pb, scorer
 
 
-# %% Function to transcript audio segments. Input: Deepspeech object, audio, sample_rate. Returns: a list [Inference, Inference Time, Audio Length].
-def stt(ds: Model, audio: np.ndarray, fs: int):
+# %% Function to transcript audio segments. Input: Deepspeech object, audio as np.ndarray type. Returns: a list [Inference, Inference Time].
+def stt(ds: Model, audio: np.ndarray):
     inference_time: float = 0.0
-    # Run Deepspeech
-    # print("Running inference...")
     inference_start = timer()
     output: str = ds.stt(audio)
     inference_end = timer() - inference_start
     inference_time += inference_end
-    # print(
-    #     "Inference took %0.3fs for %0.3fs audio file." % (inference_end, audio_length)
-    # )
 
     return [output, inference_time]

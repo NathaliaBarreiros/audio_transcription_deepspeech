@@ -16,7 +16,7 @@ def main():
     dir_name = os.path.expanduser(model)
     ds_instance = DeepSpeechModel(dir_name)
     output_graph, scorer = ds_instance.resolve_models_paths()
-    model_retval: List[str] = ds_instance.load_models()
+    model_retval: List[str] = ds_instance.load_models(output_graph, scorer)
     data = pd.read_csv("../csv_docs/paths.csv")
     paths: List[str] = list(data.audio_path)
 
@@ -36,6 +36,8 @@ def main():
             wave_file, aggresive)
         for j, segment in enumerate(segments):
             audio = np.frombuffer(segment, dtype=np.int16)
+            # print(audio)
+            # print(type(audio))
             output = ds_instance.transcript_audio_segments(
                 model_retval[0], audio)
             transcript = output[0]
