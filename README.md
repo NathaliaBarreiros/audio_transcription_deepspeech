@@ -1,6 +1,6 @@
 # Transcription .wav audio files with DeepSpeech library
 
-The objective of this project is to read a column of a CSV file that contains paths of audio files with a .wav extension, and then transcribe the audios with the help of Mozilla's DeepSpeech library. Finally, another CSV file containing a new column with the transcribed text must be returned.
+The objective of this project is to read a column of a CSV file that contains paths of audio files with a .wav extension, and then transcribe the audios with the help of Mozilla's DeepSpeech library. Finally, another CSV file containing a new column with the transcribed text must be returned. This project uses both object-oriented and functional programming paradigm, so there are folders for each approach.
 
 ## Audio specifications
 
