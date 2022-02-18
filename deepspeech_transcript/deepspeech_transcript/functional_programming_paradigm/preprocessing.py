@@ -26,7 +26,7 @@ def read_wave(path: str):
 
 
 # %% Representation of a frame audio data
-class Frame(object):
+class Frame():
     def __init__(self, bytes: bytes, timestamp: float, duration: float):
         self.bytes = bytes
         self.timestamp = timestamp
